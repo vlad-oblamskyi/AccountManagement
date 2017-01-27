@@ -88,7 +88,7 @@ func (t *AccountManagement) Invoke(stub shim.ChaincodeStubInterface, function st
 		mapId := string(state);
 		jsonAccountKey, _ := json.Marshal(accountKey)
 		jsonAccountValue, _ := json.Marshal(accountValue)
-		invokeArgs := util.ToChaincodeArgs("put", jsonAccountKey, jsonAccountValue)
+		invokeArgs := util.ToChaincodeArgs("put", string(jsonAccountKey), string(jsonAccountValue))
 
 		stub.InvokeChaincode(mapId, invokeArgs)
 		return nil, nil
@@ -123,10 +123,11 @@ func (t *AccountManagement) Query(stub shim.ChaincodeStubInterface, function str
 				Currency: userDetails.Permissions[i].Key.Currency,
 				Type: userDetails.Permissions[i].Key.Type,
 			}
-			invokeArgs := util.ToChaincodeArgs("function", json.Marshal(accountKey))
+			jsonAccountKey, _ :=  json.Marshal(accountKey)
+			invokeArgs := util.ToChaincodeArgs("function", string(jsonAccountKey))
 			account, _ := stub.InvokeChaincode(mapId, invokeArgs)
 			if account != nil {
-				accounts = append(accounts, account)
+				accounts = append(accounts, string(account))
 			}
 		}
 		return json.Marshal(accounts)
