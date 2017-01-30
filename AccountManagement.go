@@ -15,6 +15,17 @@ const KVS_HANLDER_KEY = "KVS_HANDLER_KEY"
 type AccountManagement struct {
 }
 
+type AccountView struct {
+	Id         string  `json:"id"`
+	BIC        string  `json:"bic"`
+	Number     string  `json:"number"`
+	Amount     string  `json:"amount"`
+	Currency   string  `json:"currency"`
+	Type       string  `json:"type"`
+	Date       string  `json:"lastActivity"`
+	AccessType string  `json:"permissions"`
+}
+
 type AccountKey struct {
 	HolderBIC string  `json:"holderBic"`
 	OwnerBIC  string  `json:"ownerBic"`
@@ -28,6 +39,21 @@ type AccountValue struct {
 	Type      string  `json:"type"`
 	Date      string  `json:"date"`
 	Number    string  `json:"number"`
+	Transactions []Transaction `json:"transactions"`
+}
+
+type Transaction struct {
+	TransactionId string            `json:"transactionId"`
+	Sender Organization             `json:"sender"`
+	Receiver Organization           `json:"receiver"`
+	SenderAccountKey AccountKey     `json:"senderAccountKey"`
+	ReceiverAccountKey AccountKey   `json:"receiverAccountKey"`
+	Fee string                      `json:"fee"`
+	Amount string                   `json:"amount"`
+	TransactionDetails Details      `json:"details"`
+	Status string                   `json:"status"`
+	Comment string                  `json:"comment"`
+	Time string                     `json:"time"`
 }
 
 type UserKey struct {
@@ -126,8 +152,23 @@ func (t *AccountManagement) Query(stub shim.ChaincodeStubInterface, function str
 			jsonAccountKey, _ :=  json.Marshal(accountKey)
 			invokeArgs := util.ToChaincodeArgs("function", string(jsonAccountKey))
 			account, _ := stub.QueryChaincode(mapId, invokeArgs)
+			var accountValue AccountValue
+			if err := json.Unmarshal(queryResult, &accountValue); err != nil {
+				panic(err)
+			}
 			if account != nil {
-				accounts = append(accounts, string(account))
+				accountView := &AccountView {
+					Id: b64.StdEncoding.EncodeToString(string(jsonUserKey)),
+					BIC: userDetails.Permissions[i].Key.Owner,
+					Number: accountValue.Number,
+					Amount: accountValue.Amount,
+ 					Currency: accountValue.Currency,
+ 					Type: accountValue.Type,
+					Date: accountValue.Date,
+					AccessType: userDetails.Permissions[i].Access,
+				}
+				jsonAccountView, _ := json.Marshal(accountView)
+				accounts = append(accounts, string(jsonAccountView))
 			}
 		}
 		return json.Marshal(accounts)
