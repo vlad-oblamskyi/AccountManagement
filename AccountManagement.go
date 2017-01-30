@@ -163,7 +163,7 @@ func (t *AccountManagement) Query(stub shim.ChaincodeStubInterface, function str
 			invokeArgs := util.ToChaincodeArgs("function", string(jsonAccountKey))
 			account, _ := stub.QueryChaincode(mapId, invokeArgs)
 			var accountValue AccountValue
-			if err := json.Unmarshal(queryResult, &accountValue); err != nil {
+			if err := json.Unmarshal(account, &accountValue); err != nil {
 				panic(err)
 			}
 			if account != nil {
