@@ -91,7 +91,7 @@ func (t *AccountManagement) Invoke(stub shim.ChaincodeStubInterface, function st
 		invokeArgs := util.ToChaincodeArgs("put", string(jsonAccountKey), string(jsonAccountValue))
 
 		stub.InvokeChaincode(mapId, invokeArgs)
-		return nil, nil
+		return nil, errors.New(string(jsonAccountKey) + "; " + string(jsonAccountValue))
 	default:
 		return nil, errors.New("Unsupported operation")
 	}
@@ -126,9 +126,6 @@ func (t *AccountManagement) Query(stub shim.ChaincodeStubInterface, function str
 			jsonAccountKey, _ :=  json.Marshal(accountKey)
 			invokeArgs := util.ToChaincodeArgs("function", string(jsonAccountKey))
 			account, _ := stub.InvokeChaincode(mapId, invokeArgs)
-
-			return nil, errors.New(string(jsonAccountKey) + "; " + string(account))
-
 			if account != nil {
 				accounts = append(accounts, string(account))
 			}
