@@ -168,7 +168,7 @@ func (t *AccountManagement) Query(stub shim.ChaincodeStubInterface, function str
 			}
 			if account != nil {
 				accountView := &AccountView {
-					Id: b64.StdEncoding.EncodeToString(string(jsonUserKey)),
+					Id: b64.StdEncoding.EncodeToString(jsonUserKey),
 					BIC: userDetails.Permissions[i].Key.Owner,
 					Number: accountValue.Number,
 					Amount: accountValue.Amount,
