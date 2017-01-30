@@ -42,6 +42,16 @@ type AccountValue struct {
 	Transactions []Transaction `json:"transactions"`
 }
 
+type Organization struct {
+	BIC string
+	Account string
+}
+
+type Details struct {
+	InputMessage  string  `json:"inputMessage"`
+	OutputMessage string  `json:"outputMessage"`
+}
+
 type Transaction struct {
 	TransactionId string            `json:"transactionId"`
 	Sender Organization             `json:"sender"`
