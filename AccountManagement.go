@@ -121,7 +121,7 @@ func (t *AccountManagement) Query(stub shim.ChaincodeStubInterface, function str
 				HolderBIC: userDetails.Permissions[i].Key.Holder,
 				OwnerBIC: userDetails.Permissions[i].Key.Owner,
 				Currency: userDetails.Permissions[i].Key.Currency,
-				Type: userDetails.Permissions[i].Key.Type,
+				Type: userDetails.Permissions[i].Key.AccountType,
 			}
 			jsonAccountKey, _ :=  json.Marshal(accountKey)
 			invokeArgs := util.ToChaincodeArgs("function", string(jsonAccountKey))
