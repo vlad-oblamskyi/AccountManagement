@@ -64,6 +64,12 @@ type Transaction struct {
 	Status string                   `json:"status"`
 	Comment string                  `json:"comment"`
 	Time string                     `json:"time"`
+	AccState AccountState           `json:"accountState"`
+}
+
+type AccountState struct {
+	Amount string      `json:"amount"`
+	Currency string    `json:"currency"`
 }
 
 type UserKey struct {
